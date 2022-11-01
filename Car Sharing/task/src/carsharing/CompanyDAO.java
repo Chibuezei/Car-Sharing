@@ -15,3 +15,14 @@ interface CarDAO {
     public void createTable();
     void createCar(String car, int companyId);
 }
+
+interface CustomerDAO {
+    List<Customer> getAllCustomers();
+    void rentCar(int customerID, int carID);
+    void returnCar(int CustomerID);
+    List<Car> getRentedCars(int customerID);
+
+    void createTable();
+
+    void addCustomer(Customer customer);
+}

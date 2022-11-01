@@ -51,7 +51,6 @@ public class Database {
 
     public static ResultSet runSelect(String query) throws SQLException {
         connectToDB();
-        System.out.println(query);
         return executeQuery(query);
     }
 

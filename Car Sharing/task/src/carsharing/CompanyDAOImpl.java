@@ -14,7 +14,7 @@ public class CompanyDAOImpl implements CompanyDAO {
     @Override
     public List<Company> getAllCompanies() {
         List<Company> companies = new ArrayList<>();
-        if (!tableCreated)  createTable();
+        if (!tableCreated) createTable();
         try {
             String sql = "SELECT * FROM Company";
 
@@ -59,12 +59,12 @@ public class CompanyDAOImpl implements CompanyDAO {
     public void createTable() {
         try {
             Database.connectToDB();
-            String sql1 = "DROP TABLE IF EXISTS COMPANY";
             String sql = "CREATE TABLE if not exists COMPANY" +
                     "(ID IDENTITY NOT NULL PRIMARY KEY," +
                     "NAME VARCHAR(70) UNIQUE not null)";
             String alter = "ALTER TABLE company ALTER COLUMN id RESTART WITH 1";
             Database.executeUpdate(sql);
+            Database.executeUpdate(alter);
             Database.closeConnection();
             tableCreated = true;
         } catch (SQLException e) {
@@ -74,9 +74,9 @@ public class CompanyDAOImpl implements CompanyDAO {
 
     public static void runInsert(String company) throws SQLException {
         String sql2 = "INSERT INTO COMPANY " +
-                "VALUES(default,'" + company +"')";
+                "VALUES(default,'" + company + "')";
 
-Database.runInsert(sql2);
+        Database.runInsert(sql2);
 
     }
 

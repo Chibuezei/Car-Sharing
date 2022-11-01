@@ -11,14 +11,12 @@ public class CarDAOImpl implements CarDAO {
     public CarDAOImpl() {
     }
 
-    @Override
-    public List<Car> getAllCars(int owner) {
-        List<Car> cars = new LinkedList<>();
-        if (!tableCreated)  createTable();
-        try {
 
-            ResultSet result = Database
-                    .runSelect("SELECT * FROM CAR WHERE COMPANY_ID = " + owner + " ORDER BY ID");
+    public List<Car> getCars(String query) {
+        List<Car> cars = new LinkedList<>();
+        if (!tableCreated) createTable();
+        try {
+            ResultSet result = Database.runSelect(query);
 
             while (result.next()) {
                 cars.add(new Car(result.getInt("ID"), result.getString("NAME")));
@@ -32,6 +30,28 @@ public class CarDAOImpl implements CarDAO {
         return cars;
 
     }
+
+    @Override
+    public List<Car> getAllCars(int owner) {
+        String query2 = "SELECT * FROM CAR WHERE COMPANY_ID = " + owner + " ORDER BY ID";
+        return getCars(query2);
+    }
+
+    public List<Car> getAvailableCars() {
+        String query = "SELECT car.id, car.name, car.company_id \n" +
+                "                    FROM car LEFT JOIN customer \n" +
+                "                    ON car.id = customer.rented_car_id \n" +
+                "                    WHERE customer.name IS NULL;";
+        return getCars(query);
+    }
+
+    public List<Car> getAllNotRentedCars(int owner) {
+        String sql = "SELECT CAR.* FROM CAR WHERE CAR.COMPANY_ID = " + owner + "AND CAR.ID NOT IN " +
+                " (SELECT CUSTOMER.RENTED_CAR_ID FROM CUSTOMER WHERE CUSTOMER.RENTED_CAR_ID IS NOT NULL) ORDER BY CAR.ID";
+
+        return getCars(sql);
+    }
+
 
     @Override
     public Car getCar(int rollNo) {
